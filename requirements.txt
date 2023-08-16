@@ -1,0 +1,12 @@
+transformers
+transformers[sentencepiece]
+datasets
+pickle
+rouge_score 
+py7zr
+pandas
+nltk
+tqdm
+matplotlib
+torch
+notebook
