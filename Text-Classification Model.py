@@ -1,3 +1,9 @@
+import streamlit as st
+import torch
+import pickle
+from transformers import DistilBertTokenizer, DistilBertModel
+
+# Define your Mat_category dictionary here
 Mat_category = {
     10000: 'API',
     12000: 'Excipients',
@@ -36,16 +42,6 @@ Mat_category = {
 }
 
 
-
-
-text=input('Enter your text:')
-
-
-import torch
-import pickle
-from transformers import DistilBertTokenizer, DistilBertModel
-
-
 # Loading pre-trained DistilBERT model and tokenizer
 model_name = 'distilbert-base-uncased'
 tokenizer = DistilBertTokenizer.from_pretrained(model_name)
@@ -60,25 +56,35 @@ def generate_text_embedding(text):
         text_embedding = outputs.last_hidden_state.mean(dim=1).squeeze()
     return text_embedding
 
-# Loading category embeddings from pickle file
-input_file = r"C:\Users\Amber.mishra\PycharmProjects\Text-Classification-Project1\category_embeddings07.pkl"
-with open(input_file, 'rb') as file:
+# Load category_embeddings from pickle file
+with open('category_embeddings07.pkl', 'rb') as file:
     category_embeddings = pickle.load(file)
 
+# Streamlit app
+def main():
+    st.title("CATEGORY PREDICTOR")
 
-# Generating text embedding for the input text
-text_embedding = generate_text_embedding(text)
+    text_input = st.text_input("Enter your text:")
 
-# Calculating similarity and assigning predicted category
-predicted_category = None
-max_similarity = -1
+    # Check if text_input is not empty
+    if text_input:
+        # Generating text embedding for the input text
+        text_embedding = generate_text_embedding(text_input)
 
-for category, embeddings in category_embeddings.items():
-    similarities = torch.cosine_similarity(torch.stack(embeddings), text_embedding.unsqueeze(0))
-    category_similarity = torch.max(similarities).item()
+        # Calculating similarity and assigning predicted category
+        predicted_category = None
+        max_similarity = -1
 
-    if category_similarity > max_similarity:
-        max_similarity = category_similarity
-        predicted_category = category
+        for category, embeddings in category_embeddings.items():
+            similarities = torch.cosine_similarity(torch.stack(embeddings), text_embedding.unsqueeze(0))
+            category_similarity = torch.max(similarities).item()
 
-print(Mat_category[predicted_category])
+            if category_similarity > max_similarity:
+                max_similarity = category_similarity
+                predicted_category = category
+
+        prediction_text = Mat_category.get(predicted_category, "Unknown Category")
+        st.write("Predicted category:", prediction_text)
+
+if __name__ == "__main__":
+    main()
