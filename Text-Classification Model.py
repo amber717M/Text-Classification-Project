@@ -1,6 +1,6 @@
 import streamlit as st
 import torch
-import pickle
+import pickle5 as pickle
 from transformers import DistilBertTokenizer, DistilBertModel
 
 # Define your Mat_category dictionary here
