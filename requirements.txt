@@ -1,7 +1,7 @@
 transformers
 transformers[sentencepiece]
 datasets
-pickle
+pickle5
 rouge_score 
 py7zr
 pandas
