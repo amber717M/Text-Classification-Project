@@ -2,7 +2,7 @@ from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 from transformers import RobertaTokenizer, RobertaModel
 import torch
-import pickle
+import pickle5 as pickle
 
 app = FastAPI()
 Mat_category = {
