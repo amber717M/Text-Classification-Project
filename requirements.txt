@@ -11,3 +11,5 @@ matplotlib
 torch
 notebook
 uvicorn
+pydantic
+fastapi
